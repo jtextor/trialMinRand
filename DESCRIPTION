@@ -1,5 +1,5 @@
 Package: trialMinRand
-Title: Minimisation Randomization for Clinical Trials.
+Title: Minimisation Randomization for Clinical Trials
 Version: 0.0.0.9000
 Authors@R: person("Johannes", "Textor", email = "johannes.textor@gmx.de", role = c("aut", "cre"))
 Description: A simple implementation of an adaptive randomization procedure that attempts
