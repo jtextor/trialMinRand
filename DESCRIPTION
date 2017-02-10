@@ -1,7 +1,7 @@
 Package: trialMinRand
 Title: Minimisation Randomization for Clinical Trials
 Version: 0.0.0.9000
-Authors@R: person("Johannes", "Textor", email = "johannes.textor@gmx.de", role = c("aut", "cre"))
+Authors@R: c(person("Johannes", "Textor", email = "johannes.textor@gmx.de", role = c("aut", "cre")),person("Inge", "Wortel", role = c("aut")))
 Description: A simple implementation of an adaptive randomization procedure that attempts
     to minimize imbalance within a number of pre-defined factors. 
 Depends:
