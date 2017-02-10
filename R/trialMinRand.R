@@ -67,6 +67,9 @@ imbalance <- function( treatments, treatment.ratios=setNames(rep(1,length(treatm
 	if( any( x <= 0 ) ){
 		stop("Each treatment ratio must be positive!")
 	}
+	if( !all.equal( names(x), sort(names(x)) ) ){
+		stop("Give treatment options and labels in alphabetic order!")
+	}
 }
 
 # Parameter check for the actual treatments.
@@ -148,7 +151,11 @@ assign.next.treatment <- function(
 	} else {
 		# Pick treatment at random, using biased coin to attain desired
 		# treatment ratio.
-		r <- sample( treatments, 1, prob=treatment.ratios[treatments] )
+		#print( treatments )
+		#print( treatment.ratios[(treatments)] )
+		#print( rep(treatments,treatment.ratios[(treatments)]) )
+
+		r <- sample( rep(treatments,treatment.ratios[treatments]), 1 )
 	}
 	r
 }
