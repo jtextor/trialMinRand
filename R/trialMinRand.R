@@ -143,7 +143,7 @@ assign.next.treatment <- function(
 				treatment.ratios)
 		} ) ) } )
 
-	if( runif(1) > p ){
+	if( runif(1) > p && diff(range(imbalances))>0 ){
 		# Sort treatments in increasing order by imbalance, randomly breaking ties.
 		treatments <- treatments[order(imbalances, sample(N))]
 		# Return treatment with smallest imbalance.
