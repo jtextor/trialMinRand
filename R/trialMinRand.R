@@ -91,8 +91,10 @@ imbalance <- function( treatments, treatment.ratios ) {
 	if( any( x <= 0 ) ){
 		stop("Each treatment ratio must be positive!")
 	}
+
 	if( is.null(names(x)) ){
 		stop("The vector treatment.ratios must be named after the treatments! (E.g., c(A=2,B=1) instead of c(1,2))")
+
 	}
 }
 
@@ -197,8 +199,7 @@ assign.next.treatment <- function(
 			} ) ) 
 	} )
 
-	# OUTPUT
-	if( runif(1) > p ){
+	if( runif(1) > p && diff(range(imbalances))>0 ){
 		# Sort treatments in increasing order by imbalance, randomly breaking ties.
 		treatments <- treatments[order(imbalances, sample(N))]
 		# Return treatment with smallest imbalance.
@@ -206,7 +207,7 @@ assign.next.treatment <- function(
 	} else {
 		# Pick treatment at random, using biased coin to attain desired
 		# treatment ratio.
-		r <- sample( treatments, 1, prob=treatment.ratios[as.character(treatments)] )
+		r <- sample( rep(treatments,treatment.ratios[treatments]), 1 )
 	}
 	r
 }
