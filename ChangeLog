@@ -1,0 +1,89 @@
+2017-03-22 Inge Wortel <ingewortel@gmail.com>
+
+	* ChangeLog : created
+
+	* trailMinRand.R : updated documentation.
+
+	* trailMinRand.R (simulate.trial) : Forced conversion of treatments vector to character to avoid problems with factor behaviour. Added treatment.ratios as obligatory input argument to make function compatible with the changes in imbalance() and assign.next.treatment() on 13/03. Changed .c.fac() to normal c().
+
+	* trailMinRand.R (simulate.random.trial) : Likewise. Added treatment.ratios as an argument so the names can be used to sample a treatment from (instead of the factor levels, which are not necessarily there because treatments does not have to be a factor anymore). 
+
+	* trailMinRand.R (total.imbalance) : Added obligatory argument treatment.ratios() to pass on to imbalance().
+
+
+
+2017-03-13 Inge Wortel <ingewortel@gmail.com>
+
+	* trialMinRand.R (assign.next.treatment): convert factors to character vector before calculating imbalance (avoid unexpected behaviour of factors resulting in a bug that the order of treatments in treatment.ratios influences result).
+
+	* trialMinRand.R (assign.next.treatment): removed default for treatment.ratios. This forces the user to specify all possible treatments in treatment.ratios which prevents a situation where at treatment never gets assigned because it wasn't present in the input.
+	
+	* trialMinRand.R (imbalance) : likewise.
+
+	* trialMinRand.R (assign.next.treatment): previous.treatment no longer has to be a factor, can be character or numeric vector (as long as all treatments in this vector correspond to the names in treatment.ratios).
+
+	* trialMinRand.R (imbalance) : likewise
+
+	* trialMinRand.R (.check.treatments) : now allows character/numeric vectors next to factors.
+
+	* trialMinRand.R (.check.treatment.ratios) : added checks that 1) treatment.ratios is a vector, 2) treatment.ratios is numeric, 3) treatment.ratios is named.
+
+	* trialMinRand.R (.check.treatment.names) : new function to check that all treatments in previous.treatments correspond to one of the names in treatment.ratios. If previous.treatments is a factor, the levels of this factor should all correspond to one of the names in treatment.ratios.
+
+	* trialMinRand.R (.c.fac) : removed; no longer required now that factors are internally converted to character.
+
+	* trialMinRand.R (imbalance) : bugfix - start with an empty table (0s for all treatments present in treatment.ratios) to prevent that treatments are missing from the table if they haven't occurred yet in previous.treatments. 
+
+	* trialMinRand.R (imbalance) : updated documentation.
+	
+	* trialMinRand.R (assign.next.treatment) : likewise
+
+
+	* test-imbalance.R : Added test to check input: 
+		- if no input is specified
+		- if input doesn't satisfy .check.treatments(), .check.treatment.ratios() or .check.treatment.names()
+
+	* test-imbalance.R : Added test to check output: should be numeric of length one. This test should fail if imbalance ever returns NA (logical).
+
+	* test-imbalance.R : Added tests for function calls that should be equivalent:
+		- result should be the same for different encoding of treatment (factor, numeric or character)
+		- result should stay the same if treatment.ratios is multiplied with a constant (eg 1:1 = 3:3).
+		- result should stay the same if the order in the treatment vector changes.
+		- result should stay the same if the order of treatments in treatment.ratios changes
+		- For 1:1 ratio, it shouldn't matter which treatment is present less.
+
+	* test-imbalance.R : Added tests for specific output values
+		- balanced treatment vectors (factor, numeric or character) should always return 0
+		- unbalanced vectors of any type should never return zero.
+
+	* test-imbalance.R : Added test to check that function still works if not all treatments have been assigned yet.
+
+	* test-assignment.R : File created. NOTE: all tests of assign.next.treatment() that are based on a value use p=0 to avoid randomness in treatment assignment. 
+
+	* test-assignment.R : Added tests to check input; errors for wrong input:
+		- if no input is specified	
+		- if either patient.data or treatment.ratios is missing
+		- if patient.data is not a dataframe of at least one row
+		- if input doesn't satisfy the .check.treatments(), .check.treatment.ratios() 
+
+	* test-assignment.R : Added test to check input compatibility:
+		- errors returned if nrow(patient.data) != length(previous.treatments)
+		- errors if input does not satisfy .check.treatment.names()
+
+	* test-assignment.R : Added test to check the output format:
+		- output should be character of length 1. (This test should fail if imbalance() ever returns NA.)
+
+	* test-assignment.R : Added tests for function calls that should be equivalent:
+		- result should stay the same if treatment.ratios is multiplied with a constant (50:100 vs 1:2)
+		- result should stay the same if elements of treatment.ratios are in a different order
+		- result should stay the same if previous patients are ordered differently
+		  (reorder previous.treatments and all but the last row of patient.data in the same way).
+		
+	* test-assignment.R : Added tests for specific output values:
+		- trivial examples in which one treatment has not been assigned to any patient yet
+		- trivial examples in which two treatments have so far not been assigned, but one of them
+		  has a higher weight in treatment.ratios
+		- check that even when there is no imbalance (and the choice is thus random), the chosen treatment
+		  is still one of those from treatment.ratios
+		- example from the paper describing the minimization method should give the result described there. 
+

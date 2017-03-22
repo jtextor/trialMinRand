@@ -4,8 +4,8 @@
 \alias{assign.next.treatment}
 \title{Assign Next Treatment for Patient}
 \usage{
-assign.next.treatment(patient.data, previous.treatments,
-  treatment.ratios = NULL, p = 0.3)
+assign.next.treatment(patient.data, treatment.ratios,
+  previous.treatments = character(0), p = 0.3)
 }
 \arguments{
 \item{patient.data}{a data frame containing the strata for each patient.
@@ -13,11 +13,13 @@ The last row of this data frame is assumed to contain the strata for the
 new patient, who will receive the next treatment. Strata can be given
 as a factor, or as columns that can be interpreted as a factor.}
 
-\item{previous.treatments}{a factor containing the previous treatments.
-This factor should contain}
-
 \item{treatment.ratios}{a named vector containing the desired ratios
 in which treatments are to be given.}
+
+\item{previous.treatments}{a factor or numeric/character vector containing 
+the previous treatments. 'previous.treatments' should have an element for
+each row in patient.data except the last (which represents the current patient
+for whom no treatment has been determined yet).}
 
 \item{p}{probability with which a random treatment will be chosen 
 (with the desired ratio) instead of choosing the treatment that minimizes
@@ -34,7 +36,7 @@ d <- data.frame( F1=factor(c(1,2,2),levels=1:2),
 # Define previous treatments
 tr <- factor( c("A","A"), levels=c("A","B") )
 # Call function to obtain next treatment
-next.tr <- assign.next.treatment( d, tr, c(A=2,B=1) )
+next.tr <- assign.next.treatment( d, c(A=2,B=1), tr )
 
 }
 

@@ -4,14 +4,13 @@
 \alias{imbalance}
 \title{Treatment Imbalance}
 \usage{
-imbalance(treatments, treatment.ratios = setNames(rep(1, length(treatments)),
-  levels(treatments)))
+imbalance(treatments, treatment.ratios)
 }
 \arguments{
-\item{treatments}{a factor containing a sequence of treatments.}
+\item{treatments}{a factor or a character/numeric vector containing a sequence of treatments.}
 
 \item{treatment.ratios}{a named vector containing the desired treatment ratios.
-By default, each treatment is given in the same frequency.}
+Treatment.ratios should at least contain all unique elements of the treatments vector.}
 }
 \description{
 Provides a measure of treatment imbalance with respect to a desired ratio of
@@ -23,9 +22,13 @@ Otherwise, the imbalance is positive.
 }
 \examples{
 # A balanced treatment vector
-imbalance(factor(c("A","B","B","A"),levels=c("A","B")))
-# Still balanced if ratio is given as 50:50 instead of the default 1:1
+imbalance(factor(c("A","B","B","A"),levels=c("A","B")),treatment.ratios=c(A=1,B=1))
+# Still balanced if ratio is given as 50:50 instead of 1:1
 imbalance(factor(c("A","B","B","A"),levels=c("A","B")),treatment.ratios=c(A=50,B=50))
+# Treatments can also be provided as a numeric vector
+imbalance(c(1,2,2,1),treatment.ratios=c("1"=1,"2"=1))
+# Treatments can be provided as a character vector
+imbalance(c("A","B","B","A"), treatment.ratios=c(A=1,B=1))
 
 }
 
