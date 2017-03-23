@@ -1,3 +1,16 @@
+2017-03-23 Inge Wortel <ingewortel@gmail.com>
+
+	* README.md : Updated example.
+
+	* trialMinRand.R (simulate.trial) : added option 'method' which can be either 'min' (minimization) or 'rand' (random assignment). Merged with simulate.random.trial()
+
+	* trailMinRand.R (simulate.random.trial) : removed (merged with simulate.trial)
+
+	* trailMinRand.R (simulate.trial) : Added obligatory input argument 'strata.levels'; a named list with all possible values for the different factors in the patient.data dataframe. Ensures correct behaviour if columns of patient.data are not factors and not all strata are present in the initial data. Changed addition random new patients accordingly.
+
+	* trialMinRand.R (simulate.trial) : For random treatment assignment, added probabilities according to treatment.ratios to the sampling of a new treatment. 	
+
+
 2017-03-22 Inge Wortel <ingewortel@gmail.com>
 
 	* ChangeLog : created
