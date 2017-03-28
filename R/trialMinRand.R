@@ -212,29 +212,43 @@ assign.next.treatment <- function(
 	r
 }
 
-simulate.trial <- function( initial.data, initial.treatments, N,... ){
-	d <- initial.data
-	tr <- initial.treatments
+simulate.trial <- function( initial.data, treatment.ratios, initial.treatments, N, strata.levels, method="min",... ){
+	d <- initial.data 		# a dataframe
+	tr <- initial.treatments 	# factor or numeric/character vector
+
+	# Convert all to character vector to avoid problems with factor behaviour:
+	tr <- as.character( tr )
+
+	# Patients come in in random order until all have been treated. 
 	while( nrow(d) < N ){
-		d <- rbind(d,apply(d,2,function(x)sample(x,1)))
-		tr <- .c.fac( tr, assign.next.treatment(d,tr,...) )
+		# The new patient has a random combination of strata
+		# All possible levels for each stratum are stored in the named list 'strata.levels'
+		# (names must correspond to initial.data colnames)
+		d <- rbind(d, sapply(colnames(d), function(x) sample(strata.levels[[x]],1)))
+
+		# Assign the treatment according to the chosen method:
+		if( method=="min"){
+			#use assign.next.treatment
+			tr <- c( tr, assign.next.treatment(d, treatment.ratios, tr,...) )
+
+		} else if (method == "rand"){
+		# Assign one of the treatments randomly with probability according to treatment.ratio
+		tr <- c( tr, sample(names(treatment.ratios),1,prob=treatment.ratios) )
+
+		} else {
+			stop("Unknown method! Please pick 'min' or 'rand' or keep default.")
+		}
+			
 	}
+	# output both the renewed data and the renewed treatment vector.
 	list( patient.data=d, treatments=tr )
 }
 
-simulate.random.trial <- function( initial.data, initial.treatments, N ){
-	d <- initial.data
-	tr <- initial.treatments
-	while( nrow(d) < N ){
-		d <- rbind(d,apply(d,2,function(x)sample(x,1)))
-		tr <- .c.fac( tr, sample(as.factor(levels(tr)),1) )
-	}
-	list( patient.data=d, treatments=tr )
-}
-
-total.imbalance <- function( patient.data, treatments, ... ){
+total.imbalance <- function( patient.data, treatments, treatment.ratios, ... ){
+	# For each factor f...
 	apply( patient.data, 2, function(f){
-		sum( by( treatments, f, function(x) imbalance(x,...) ) )
+		# ...Calculate the sum of the imbalances (imbalance for each treatment)
+		sum( by( treatments, f, function(x) imbalance(x, treatment.ratios, ...) ) )
 	})
 }
 

@@ -19,12 +19,15 @@ d <- data.frame( F1=factor(c(1,2,2),levels=1:2),
   F2=factor(c(1,1,2),levels=1:2) )
 
 # Define previous treatments
-tr <- factor( c("A","A"), levels=c("A","B") )
+tr <- c("A","A")
+
+# Define desired ratio for all possible treatments: A:B=2:1
+tratio <- c(A=2,B=1)
 
 # Call function to obtain next treatment. With probability 
 # 0.7, this is going to be a treatment that minimizes imbalance.
 # With probability 0.3, it is going to be a random treatment.
 # Both imbalance and the distribution of random treatments are 
 # defined using a 2:1 ratio for the treatments A and B.
-next.tr <- assign.next.treatment( d, tr, c(A=2,B=1), p=0.3 )
+next.tr <- assign.next.treatment( d, tratio, tr, p=0.3 )
 ```
